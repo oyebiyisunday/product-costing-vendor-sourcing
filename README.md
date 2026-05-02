@@ -12,6 +12,7 @@ Excel workbook for a **multi-vendor bill of materials (BOM)**: pick a vendor per
 | [`scripts/build_vendor_workbook.py`](scripts/build_vendor_workbook.py) | Regenerates the workbook (Python + [openpyxl](https://openpyxl.readthedocs.io/)). |
 | [`docs/problem.md`](docs/problem.md) | Assignment / requirements. |
 | [`docs/solution.md`](docs/solution.md) | How the workbook solves the problem and step-by-step usage. |
+| [`requirements.txt`](requirements.txt) | Python dependency pin for rebuilding the workbook. |
 
 ## Quick start
 
@@ -26,7 +27,7 @@ More detail: **[`docs/solution.md`](docs/solution.md)**.
 From the repository root:
 
 ```bash
-python -m pip install openpyxl
+python -m pip install -r requirements.txt
 python scripts/build_vendor_workbook.py
 ```
 
@@ -34,12 +35,14 @@ This overwrites **`workbook/Product_Costing_Vendor_Sourcing.xlsx`**.
 
 ## Git clone and remote
 
+Clone (creates `origin` automatically):
+
 ```bash
 git clone https://github.com/oyebiyisunday/product-costing-vendor-sourcing.git
 cd product-costing-vendor-sourcing
 ```
 
-Upstream remote (after `git init` locally):
+If you created the project locally with `git init` instead of cloning, add the remote once, then push:
 
 ```bash
 git remote add origin https://github.com/oyebiyisunday/product-costing-vendor-sourcing.git
@@ -50,4 +53,4 @@ git push -u origin main
 ## Requirements
 
 - **Excel:** Microsoft 365 or Excel 2021+.
-- **Regenerate script:** Python 3.x + `openpyxl`.
+- **Regenerate script:** Python 3.x; install deps with `requirements.txt` (includes `openpyxl`).

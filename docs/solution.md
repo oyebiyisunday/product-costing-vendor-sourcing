@@ -105,7 +105,7 @@ So every price path points at **columns on the vendor worksheets** via the table
 
 ## 6. Steps — rebuild the Excel file from source
 
-1. Install Python and **`openpyxl`** (`python -m pip install openpyxl`).  
+1. Install Python, then dependencies: `python -m pip install -r requirements.txt` (from the repository root).  
 2. Edit **`scripts/build_vendor_workbook.py`** if you change sample vendor rows, BOM samples, or `table_last_row`.  
 3. From the **repository root** (the folder that contains `scripts/` and `workbook/`), run:
 
@@ -123,6 +123,7 @@ So every price path points at **columns on the vendor worksheets** via the table
 |------|--------|
 | [`README.md`](../README.md) | Project overview, quick start, remote URL. |
 | [`docs/problem.md`](problem.md) | Problem / requirements text. |
-| [`docs/solution.md`](solution.md) | This document — steps and how the solution works. |
+| `docs/solution.md` | This document — steps and how the solution works. |
+| [`requirements.txt`](../requirements.txt) | Python dependencies for `scripts/build_vendor_workbook.py`. |
 | [`workbook/Product_Costing_Vendor_Sourcing.xlsx`](../workbook/Product_Costing_Vendor_Sourcing.xlsx) | Deliverable workbook. |
 | [`scripts/build_vendor_workbook.py`](../scripts/build_vendor_workbook.py) | Programmatic build of the workbook. |
