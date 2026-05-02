@@ -17,13 +17,11 @@ This repository is a **small, production-minded template**: three vendor price t
 
 ---
 
-## Standards and community
+## License and security
 
 | Resource | Purpose |
 |----------|---------|
 | [`LICENSE`](LICENSE) | **MIT** — permissive use with attribution. |
-| [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) | **[Contributor Covenant](https://www.contributor-covenant.org/) 2.1** — expected behavior in issues and PRs. |
-| [`CONTRIBUTING.md`](CONTRIBUTING.md) | How to propose changes and what reviewers expect. |
 | [`SECURITY.md`](SECURITY.md) | How to report **security** issues responsibly. |
 | [GitHub Actions — CI](.github/workflows/ci.yml) | Verifies the Python build on every push and pull request to `main`. |
 
@@ -38,7 +36,6 @@ This repository is a **small, production-minded template**: three vendor price t
 | [`docs/problem.md`](docs/problem.md) | Original problem / requirements. |
 | [`docs/solution.md`](docs/solution.md) | Design, formulas, and step-by-step usage. |
 | [`docs/office-deployment.md`](docs/office-deployment.md) | **Office rollout:** SharePoint/OneDrive, roles, co-authoring, Excel version, IT notes. |
-| [`docs/github-repository-settings.md`](docs/github-repository-settings.md) | **GitHub:** description, topics, private vulnerability reporting, branch protection. |
 | [`requirements.txt`](requirements.txt) | Python dependency pin for rebuilding the workbook. |
 
 ---
@@ -91,12 +88,3 @@ git push -u origin main
 - **Excel:** Microsoft 365 or Excel 2021+.
 - **Regenerate script:** Python 3.x; install deps with `requirements.txt` (includes `openpyxl`).
 
----
-
-## Maintainer: GitHub UI (description, topics, security, branch protection)
-
-Step-by-step for **description**, **topics**, **private vulnerability reporting**, and **branch protection** (with optional **GitHub CLI** commands):
-
-**[`docs/github-repository-settings.md`](docs/github-repository-settings.md)**
-
-Dependabot is configured via [`.github/dependabot.yml`](.github/dependabot.yml) for **pip** and **GitHub Actions** (monthly).
