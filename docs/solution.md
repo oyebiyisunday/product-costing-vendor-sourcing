@@ -127,3 +127,10 @@ So every price path points at **columns on the vendor worksheets** via the table
 | [`requirements.txt`](../requirements.txt) | Python dependencies for `scripts/build_vendor_workbook.py`. |
 | [`workbook/Product_Costing_Vendor_Sourcing.xlsx`](../workbook/Product_Costing_Vendor_Sourcing.xlsx) | Deliverable workbook. |
 | [`scripts/build_vendor_workbook.py`](../scripts/build_vendor_workbook.py) | Programmatic build of the workbook. |
+| [`docs/office-deployment.md`](office-deployment.md) | Office rollout, collaboration, and Excel version governance. |
+
+---
+
+## 8. Office and enterprise use
+
+For **SharePoint / OneDrive**, **who should edit vendor data vs. BOM**, **co-authoring**, and **minimum Excel versions** in corporate environments, see **[`office-deployment.md`](office-deployment.md)**.

@@ -1,4 +1,8 @@
-"""Build Product Costing & Vendor Sourcing Excel workbook per spec."""
+"""Build Product Costing & Vendor Sourcing Excel workbook per spec.
+
+Project: https://github.com/oyebiyisunday/product-costing-vendor-sourcing
+Maintainer: @oyebiyisunday
+"""
 from __future__ import annotations
 
 from pathlib import Path
