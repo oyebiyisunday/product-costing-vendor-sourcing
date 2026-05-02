@@ -1,5 +1,8 @@
 # Product costing & vendor sourcing (Excel)
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![CI](https://github.com/oyebiyisunday/product-costing-vendor-sourcing/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/oyebiyisunday/product-costing-vendor-sourcing/actions/workflows/ci.yml?query=branch%3Amain)
+
 Excel workbook for a **multi-vendor bill of materials (BOM)**: pick a vendor per line, pull **unit price** from that vendor’s sheet, and roll up **total cost** from quantities and build volume.
 
 **Repository:** [github.com/oyebiyisunday/product-costing-vendor-sourcing](https://github.com/oyebiyisunday/product-costing-vendor-sourcing)
@@ -11,6 +14,18 @@ Excel workbook for a **multi-vendor bill of materials (BOM)**: pick a vendor per
 This repository is a **small, production-minded template**: three vendor price tables, one **Product_BOM** sheet with **dynamic lookups** and **batch scaling** via **Units_to_build**. It is intended for learning and portfolio use, and as a starting point you can adapt to your own part numbering, vendors, and approval workflow.
 
 **Maintainer:** [@oyebiyisunday](https://github.com/oyebiyisunday)
+
+---
+
+## Standards and community
+
+| Resource | Purpose |
+|----------|---------|
+| [`LICENSE`](LICENSE) | **MIT** — permissive use with attribution. |
+| [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) | **[Contributor Covenant](https://www.contributor-covenant.org/) 2.1** — expected behavior in issues and PRs. |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | How to propose changes and what reviewers expect. |
+| [`SECURITY.md`](SECURITY.md) | How to report **security** issues responsibly. |
+| [GitHub Actions — CI](.github/workflows/ci.yml) | Verifies the Python build on every push and pull request to `main`. |
 
 ---
 
@@ -74,3 +89,16 @@ git push -u origin main
 
 - **Excel:** Microsoft 365 or Excel 2021+.
 - **Regenerate script:** Python 3.x; install deps with `requirements.txt` (includes `openpyxl`).
+
+---
+
+## Maintainer checklist (GitHub UI)
+
+For a polished **public** repository, confirm in **Settings**:
+
+- **General:** description, website (optional), topics (e.g. `excel`, `bom`, `manufacturing`, `openpyxl`, `python`).
+- **Features:** Issues **on**; Discussions optional.
+- **Security:** “Private vulnerability reporting” **enabled** (pairs with [`SECURITY.md`](SECURITY.md)).
+- **Branches:** `main` as default; optional branch protection requiring CI to pass before merge.
+
+Dependabot is configured via [`.github/dependabot.yml`](.github/dependabot.yml) for **pip** and **GitHub Actions** (monthly).

@@ -128,6 +128,10 @@ So every price path points at **columns on the vendor worksheets** via the table
 | [`workbook/Product_Costing_Vendor_Sourcing.xlsx`](../workbook/Product_Costing_Vendor_Sourcing.xlsx) | Deliverable workbook. |
 | [`scripts/build_vendor_workbook.py`](../scripts/build_vendor_workbook.py) | Programmatic build of the workbook. |
 | [`docs/office-deployment.md`](office-deployment.md) | Office rollout, collaboration, and Excel version governance. |
+| [`LICENSE`](../LICENSE) | MIT license. |
+| [`CONTRIBUTING.md`](../CONTRIBUTING.md) | Contribution guidelines. |
+| [`SECURITY.md`](../SECURITY.md) | Security reporting policy. |
+| [`CODE_OF_CONDUCT.md`](../CODE_OF_CONDUCT.md) | Community code of conduct. |
 
 ---
 
