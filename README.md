@@ -38,6 +38,7 @@ This repository is a **small, production-minded template**: three vendor price t
 | [`docs/problem.md`](docs/problem.md) | Original problem / requirements. |
 | [`docs/solution.md`](docs/solution.md) | Design, formulas, and step-by-step usage. |
 | [`docs/office-deployment.md`](docs/office-deployment.md) | **Office rollout:** SharePoint/OneDrive, roles, co-authoring, Excel version, IT notes. |
+| [`docs/github-repository-settings.md`](docs/github-repository-settings.md) | **GitHub:** description, topics, private vulnerability reporting, branch protection. |
 | [`requirements.txt`](requirements.txt) | Python dependency pin for rebuilding the workbook. |
 
 ---
@@ -92,13 +93,10 @@ git push -u origin main
 
 ---
 
-## Maintainer checklist (GitHub UI)
+## Maintainer: GitHub UI (description, topics, security, branch protection)
 
-For a polished **public** repository, confirm in **Settings**:
+Step-by-step for **description**, **topics**, **private vulnerability reporting**, and **branch protection** (with optional **GitHub CLI** commands):
 
-- **General:** description, website (optional), topics (e.g. `excel`, `bom`, `manufacturing`, `openpyxl`, `python`).
-- **Features:** Issues **on**; Discussions optional.
-- **Security:** “Private vulnerability reporting” **enabled** (pairs with [`SECURITY.md`](SECURITY.md)).
-- **Branches:** `main` as default; optional branch protection requiring CI to pass before merge.
+**[`docs/github-repository-settings.md`](docs/github-repository-settings.md)**
 
 Dependabot is configured via [`.github/dependabot.yml`](.github/dependabot.yml) for **pip** and **GitHub Actions** (monthly).

@@ -6,6 +6,7 @@ Thank you for helping improve this project. The goal is to keep the workbook **c
 
 - Read **[`README.md`](README.md)** and **[`docs/solution.md`](docs/solution.md)** so changes stay aligned with the BOM / vendor model.
 - Office-oriented guidance lives in **[`docs/office-deployment.md`](docs/office-deployment.md)**.
+- GitHub **description, topics, security reporting, branch protection**: **[`docs/github-repository-settings.md`](docs/github-repository-settings.md)**.
 
 ## How to contribute
 

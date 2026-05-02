@@ -132,6 +132,7 @@ So every price path points at **columns on the vendor worksheets** via the table
 | [`CONTRIBUTING.md`](../CONTRIBUTING.md) | Contribution guidelines. |
 | [`SECURITY.md`](../SECURITY.md) | Security reporting policy. |
 | [`CODE_OF_CONDUCT.md`](../CODE_OF_CONDUCT.md) | Community code of conduct. |
+| [`docs/github-repository-settings.md`](github-repository-settings.md) | GitHub UI: description, topics, vulnerability reporting, branch protection. |
 
 ---
 
