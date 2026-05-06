@@ -1,72 +1,179 @@
-# Product costing & vendor sourcing (Excel)
+# Product Costing & Vendor Sourcing
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen.svg)
+![Excel](https://img.shields.io/badge/Excel-2021%2B-217346.svg)
+![Python](https://img.shields.io/badge/Python-3.x-3776ab.svg)
 
-Excel workbook for a **multi-vendor bill of materials (BOM)**: pick a vendor per line, pull **unit price** from that vendor’s sheet, and roll up **total cost** from quantities and build volume.
+**A production-ready Excel template for multi-vendor bill of materials (BOM) management with dynamic pricing, cost rollup, and batch scaling.**
 
-**Repository:** [github.com/oyebiyisunday/product-costing-vendor-sourcing](https://github.com/oyebiyisunday/product-costing-vendor-sourcing)
+Pick a vendor per line item, pull unit prices from vendor-specific sheets, and automatically calculate total costs based on quantities and build volume—all with zero manual calculation.
 
----
-
-## About this project
-
-This repository is a **small, production-minded template**: three vendor price tables, one **Product_BOM** sheet with **dynamic lookups** and **batch scaling** via **Units_to_build**. It is intended for learning and portfolio use, and as a starting point you can adapt to your own part numbering, vendors, and approval workflow.
-
-**Maintainer:** [@oyebiyisunday](https://github.com/oyebiyisunday)
+**[Live Repository](https://github.com/oyebiyisunday/product-costing-vendor-sourcing)** · **[Documentation](docs/)** · **[Report Issue](https://github.com/oyebiyisunday/product-costing-vendor-sourcing/issues)**
 
 ---
 
-## License
+## Table of Contents
 
-Released under the **[MIT License](LICENSE)**.
-
----
-
-## Layout
-
-| Path | Description |
-|------|-------------|
-| [`workbook/Product_Costing_Vendor_Sourcing.xlsx`](workbook/Product_Costing_Vendor_Sourcing.xlsx) | **Vendor_A**, **Vendor_B**, **Vendor_C** pricing tables + **Product_BOM** with formulas. |
-| [`scripts/build_vendor_workbook.py`](scripts/build_vendor_workbook.py) | Regenerates the workbook (Python + [openpyxl](https://openpyxl.readthedocs.io/)). |
-| [`docs/problem.md`](docs/problem.md) | Original problem / requirements. |
-| [`docs/solution.md`](docs/solution.md) | Design, formulas, and step-by-step usage. |
-| [`requirements.txt`](requirements.txt) | Python dependency pin for rebuilding the workbook. |
+- [Features](#features)
+- [Quick Start](#quick-start)
+- [Project Structure](#project-structure)
+- [Usage Guide](#usage-guide)
+- [Rebuild & Customize](#rebuild--customize)
+- [Requirements](#requirements)
+- [Git Setup](#git-setup)
+- [Documentation](#documentation)
+- [Support](#support)
+- [License](#license)
 
 ---
 
-## Quick start
+## Features
 
-1. Open **`workbook/Product_Costing_Vendor_Sourcing.xlsx`** in **Microsoft 365** or **Excel 2021+** (**XLOOKUP**, **SWITCH**, **IFNA**).
-2. Edit vendor parts on **Vendor_A** / **Vendor_B** / **Vendor_C** (inside each table).
-3. On **Product_BOM**, set **Units_to_build** in **I2**, then enter **Part_ID**, **Vendor**, and **Qty_Per_Product**.
-
-More detail: **[`docs/solution.md`](docs/solution.md)**.
+✅ **Multi-Vendor Support** – Compare pricing across three vendor tables (easily extensible)  
+✅ **Dynamic Lookups** – XLOOKUP formulas automatically pull unit prices based on selected vendor  
+✅ **Batch Scaling** – Single `Units_to_build` input scales all line-item quantities  
+✅ **Total Cost Rollup** – Automatic cost calculation per part and overall BOM  
+✅ **Production-Ready** – Uses Excel 2021+ native functions (XLOOKUP, SWITCH, IFNA)  
+✅ **Rebuild Script** – Python script to regenerate or customize the workbook  
+✅ **Fully Documented** – Problem definition, solution design, and usage guides included  
 
 ---
 
-## Rebuild the workbook
+## Quick Start
+
+### 1. Open the Workbook
+
+```bash
+workbook/Product_Costing_Vendor_Sourcing.xlsx
+```
+
+**Requirements:** Microsoft 365 or Excel 2021+
+
+### 2. Review Vendor Pricing
+
+Visit **Vendor_A**, **Vendor_B**, or **Vendor_C** sheets to see current pricing tables.
+
+### 3. Create Your BOM
+
+On the **Product_BOM** sheet:
+
+| Field | Description | Example |
+|-------|-------------|---------|
+| `Units_to_build` (I2) | Build quantity to scale all parts | `100` |
+| `Part_ID` (Column A) | Unique part identifier | `RESISTOR-001` |
+| `Vendor` (Column B) | Select vendor for this part | `Vendor_A` |
+| `Qty_Per_Product` (Column C) | Quantity needed per unit | `10` |
+
+→ **Total cost updates automatically!**
+
+For detailed guidance: **[docs/solution.md](docs/solution.md)**
+
+---
+
+## Project Structure
+
+```
+product-costing-vendor-sourcing/
+├── workbook/
+│   └── Product_Costing_Vendor_Sourcing.xlsx    # Main Excel workbook with vendor sheets & BOM
+├── scripts/
+│   └── build_vendor_workbook.py               # Regenerate workbook (Python + openpyxl)
+├── docs/
+│   ├── problem.md                             # Original problem statement & requirements
+│   └── solution.md                            # Design, formulas, and step-by-step usage
+├── requirements.txt                           # Python dependencies
+├── LICENSE                                    # MIT License
+└── README.md                                  # This file
+```
+
+### Key Files
+
+| Path | Purpose |
+|------|---------|
+| `workbook/Product_Costing_Vendor_Sourcing.xlsx` | **Vendor_A**, **Vendor_B**, **Vendor_C** pricing tables + **Product_BOM** with XLOOKUP formulas |
+| `scripts/build_vendor_workbook.py` | Regenerates the workbook using Python (openpyxl) |
+| `docs/problem.md` | Detailed problem definition and original requirements |
+| `docs/solution.md` | Architecture, formula explanations, and full usage walkthrough |
+| `requirements.txt` | Python package versions (openpyxl, etc.) |
+
+---
+
+## Usage Guide
+
+### For End Users (Non-Technical)
+
+1. **Open** `workbook/Product_Costing_Vendor_Sourcing.xlsx`
+2. **Check vendor pricing** on Vendor_A, Vendor_B, Vendor_C sheets (update as needed)
+3. **Set `Units_to_build`** in cell I2 on the Product_BOM sheet
+4. **Enter your parts:**
+   - Column A: Part IDs
+   - Column B: Vendor choice (Vendor_A, Vendor_B, or Vendor_C)
+   - Column C: Quantity per product
+5. **View results:** Total costs roll up automatically
+
+### For Developers (Customization)
+
+See **[docs/solution.md](docs/solution.md)** for:
+- Formula breakdowns (XLOOKUP, SWITCH, IFNA)
+- Extending to more vendors
+- Adding new columns or calculations
+
+---
+
+## Rebuild & Customize
+
+### Prerequisites
+
+- Python 3.x
+- `openpyxl` (install via requirements.txt)
+
+### Rebuild the Workbook
 
 From the repository root:
 
 ```bash
+# Install dependencies
 python -m pip install -r requirements.txt
+
+# Regenerate workbook
 python scripts/build_vendor_workbook.py
 ```
 
-This overwrites **`workbook/Product_Costing_Vendor_Sourcing.xlsx`**.
+This will overwrite `workbook/Product_Costing_Vendor_Sourcing.xlsx` with the current Python-generated version.
+
+### Customization
+
+Edit `scripts/build_vendor_workbook.py` to:
+- Add more vendor sheets
+- Modify table structure or columns
+- Update vendor pricing data programmatically
+- Include additional calculations
 
 ---
 
-## Git clone and remote
+## Requirements
 
-Clone (creates `origin` automatically):
+| Requirement | Version | Notes |
+|-------------|---------|-------|
+| **Excel** | 2021 or Microsoft 365 | Supports XLOOKUP, SWITCH, IFNA functions |
+| **Python** (rebuild only) | 3.x | Required only if regenerating the workbook |
+| **openpyxl** (rebuild only) | Latest | Installed via `requirements.txt` |
+
+---
+
+## Git Setup
+
+### Clone This Repository
 
 ```bash
 git clone https://github.com/oyebiyisunday/product-costing-vendor-sourcing.git
 cd product-costing-vendor-sourcing
 ```
 
-If you created the project locally with `git init` instead of cloning, add the remote once, then push:
+### Add Remote (If Starting from Local)
+
+If you created the project locally with `git init`:
 
 ```bash
 git remote add origin https://github.com/oyebiyisunday/product-costing-vendor-sourcing.git
@@ -76,8 +183,47 @@ git push -u origin main
 
 ---
 
-## Requirements
+## Documentation
 
-- **Excel:** Microsoft 365 or Excel 2021+.
-- **Regenerate script:** Python 3.x; install deps with `requirements.txt` (includes `openpyxl`).
+| Document | Purpose |
+|----------|---------|
+| **[docs/problem.md](docs/problem.md)** | Original problem statement, business requirements, and constraints |
+| **[docs/solution.md](docs/solution.md)** | Detailed solution architecture, formula logic, and step-by-step usage |
+| **[LICENSE](LICENSE)** | MIT License text |
 
+---
+
+## Support
+
+- 📋 **Questions or issues?** Open an [issue on GitHub](https://github.com/oyebiyisunday/product-costing-vendor-sourcing/issues)
+- 🚀 **Want to contribute?** Pull requests welcome!
+- 📧 **Contact:** [@oyebiyisunday](https://github.com/oyebiyisunday)
+
+---
+
+## License
+
+This project is released under the **[MIT License](LICENSE)**.
+
+**You are free to:**
+- ✅ Use commercially
+- ✅ Modify and distribute
+- ✅ Use privately
+
+**With conditions:**
+- ⚖️ Provide a copy of the license
+- ⚖️ State changes made to the original
+
+---
+
+## Changelog
+
+**v1.0.0** (2026-05-06)
+- ✨ Initial release
+- 📦 Multi-vendor BOM template with dynamic pricing
+- 🐍 Python rebuild script included
+- 📚 Comprehensive documentation
+
+---
+
+**Maintained by [@oyebiyisunday](https://github.com/oyebiyisunday)**
