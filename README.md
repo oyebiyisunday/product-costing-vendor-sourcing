@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 ![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen.svg)
-![Excel](https://img.shields.io/badge/Excel-2021%2B-217346.svg)
+![Excel](https://img.shields.io/badge/Excel-2010%2B-217346.svg)
 ![Python](https://img.shields.io/badge/Python-3.x-3776ab.svg)
 
 **A production-ready Excel template for multi-vendor bill of materials (BOM) management with dynamic pricing, cost rollup, and batch scaling.**
@@ -31,10 +31,10 @@ Pick a vendor per line item, pull unit prices from vendor-specific sheets, and a
 ## Features
 
 ✅ **Multi-Vendor Support** – Compare pricing across three vendor tables (easily extensible)  
-✅ **Dynamic Lookups** – XLOOKUP formulas automatically pull unit prices based on selected vendor  
+✅ **Dynamic Lookups** – VLOOKUP formulas automatically pull unit prices based on selected vendor  
 ✅ **Batch Scaling** – Single `Units_to_build` input scales all line-item quantities  
 ✅ **Total Cost Rollup** – Automatic cost calculation per part and overall BOM  
-✅ **Production-Ready** – Uses Excel 2021+ native functions (XLOOKUP, SWITCH, IFNA)  
+✅ **Production-Ready** – Uses broadly compatible Excel formulas (VLOOKUP, IFERROR, IF)  
 ✅ **Rebuild Script** – Python script to regenerate or customize the workbook  
 ✅ **Fully Documented** – Problem definition, solution design, and usage guides included  
 
@@ -44,7 +44,7 @@ Pick a vendor per line item, pull unit prices from vendor-specific sheets, and a
 
 ### 1. Open the Workbook
 
-Open `workbook/Product_Costing_Vendor_Sourcing.xlsx` in **Microsoft 365** or **Excel 2021+** (required for `XLOOKUP`, `SWITCH`, and `IFNA`).
+Open `workbook/Product_Costing_Vendor_Sourcing.xlsx` in **Excel 2010+** or **Microsoft 365**.
 
 ### 2. Review Vendor Pricing
 
@@ -94,7 +94,7 @@ product-costing-vendor-sourcing/
 
 | Path | Purpose |
 |------|---------|
-| `workbook/Product_Costing_Vendor_Sourcing.xlsx` | **Vendor_A**, **Vendor_B**, **Vendor_C** pricing tables + **Product_BOM** with XLOOKUP formulas |
+| `workbook/Product_Costing_Vendor_Sourcing.xlsx` | **Vendor_A**, **Vendor_B**, **Vendor_C** pricing tables + **Product_BOM** with VLOOKUP formulas |
 | `scripts/build_vendor_workbook.py` | Regenerates the workbook using Python (openpyxl) |
 | `scripts/verify_workbook.py` | Rebuilds to a temp file and asserts byte-for-cell parity with the committed `.xlsx` |
 | `.github/workflows/ci.yml` | Runs compile check + `verify_workbook.py` on every push and pull request to `main` |
@@ -120,7 +120,7 @@ product-costing-vendor-sourcing/
 ### For Developers (Customization)
 
 See **[docs/solution.md](docs/solution.md)** for:
-- Formula breakdowns (XLOOKUP, SWITCH, IFNA)
+- Formula breakdowns (VLOOKUP, IFERROR, IF)
 - Extending to more vendors
 - Adding new columns or calculations
 
@@ -161,7 +161,7 @@ Edit `scripts/build_vendor_workbook.py` to:
 
 | Requirement | Version | Notes |
 |-------------|---------|-------|
-| **Excel** | 2021 or Microsoft 365 | Supports XLOOKUP, SWITCH, IFNA functions |
+| **Excel** | 2010+ or Microsoft 365 | Uses VLOOKUP, IFERROR, IF, tables, and data validation |
 | **Python** (rebuild only) | 3.x | Required only if regenerating the workbook |
 | **openpyxl** (rebuild only) | Latest | Installed via `requirements.txt` |
 

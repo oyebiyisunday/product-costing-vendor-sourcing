@@ -61,6 +61,9 @@ def _compare_workbooks(wb_disk, wb_fresh) -> list[str]:
     return errs
 
 
+_MODERN_ONLY_FUNCS = ("XLOOKUP", "SWITCH", "IFNA", "LET", "LAMBDA")
+
+
 def _validate_excel_formula_compat(path: Path, wb) -> list[str]:
     errs: list[str] = []
     ws = wb["Product_BOM"]
@@ -73,6 +76,12 @@ def _validate_excel_formula_compat(path: Path, wb) -> list[str]:
                 continue
             if "[@" in formula or "#REF!" in formula:
                 errs.append(f"{ref}: Excel-fragile formula {formula!r}")
+            for fn in _MODERN_ONLY_FUNCS:
+                if fn in formula:
+                    errs.append(
+                        f"{ref}: uses {fn} which is not in older Excel "
+                        f"(use VLOOKUP/IFERROR/IF instead)"
+                    )
 
     with zipfile.ZipFile(path) as zf:
         for name in zf.namelist():

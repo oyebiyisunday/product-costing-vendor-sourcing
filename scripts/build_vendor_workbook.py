@@ -93,22 +93,20 @@ def _add_vendor_sheet(wb: Workbook, name: str, rows: list, table_name: str) -> N
 def _part_name_formula(row: int) -> str:
     return (
         f'=IF($A{row}="","",'
-        f'IFNA(SWITCH($C{row},'
-        f'"Vendor_A",XLOOKUP($A{row},Vendor_A!$A:$A,Vendor_A!$B:$B),'
-        f'"Vendor_B",XLOOKUP($A{row},Vendor_B!$A:$A,Vendor_B!$B:$B),'
-        f'"Vendor_C",XLOOKUP($A{row},Vendor_C!$A:$A,Vendor_C!$B:$B)),'
-        '"-- not on vendor --"))'
+        f'IF($C{row}="Vendor_A",IFERROR(VLOOKUP($A{row},Vendor_A!$A:$C,2,FALSE),"-- not on vendor --"),'
+        f'IF($C{row}="Vendor_B",IFERROR(VLOOKUP($A{row},Vendor_B!$A:$C,2,FALSE),"-- not on vendor --"),'
+        f'IF($C{row}="Vendor_C",IFERROR(VLOOKUP($A{row},Vendor_C!$A:$C,2,FALSE),"-- not on vendor --"),'
+        '"-- not on vendor --"))))'
     )
 
 
 def _unit_price_formula(row: int) -> str:
     return (
         f'=IF($A{row}="","",'
-        f'IFNA(SWITCH($C{row},'
-        f'"Vendor_A",XLOOKUP($A{row},Vendor_A!$A:$A,Vendor_A!$C:$C),'
-        f'"Vendor_B",XLOOKUP($A{row},Vendor_B!$A:$A,Vendor_B!$C:$C),'
-        f'"Vendor_C",XLOOKUP($A{row},Vendor_C!$A:$A,Vendor_C!$C:$C)),'
-        '""))'
+        f'IF($C{row}="Vendor_A",IFERROR(VLOOKUP($A{row},Vendor_A!$A:$C,3,FALSE),""),'
+        f'IF($C{row}="Vendor_B",IFERROR(VLOOKUP($A{row},Vendor_B!$A:$C,3,FALSE),""),'
+        f'IF($C{row}="Vendor_C",IFERROR(VLOOKUP($A{row},Vendor_C!$A:$C,3,FALSE),""),'
+        '""))))'
     )
 
 
@@ -146,8 +144,8 @@ def _add_product_bom(wb: Workbook) -> None:
 
     _style_header(ws, len(headers))
 
-    # Use A1 references here because Excel repairs openpyxl-generated
-    # structured references in some desktop builds.
+    # Plain A1 references + VLOOKUP/IFERROR/IF only, so the workbook works
+    # in every Excel from 2010 onward (no XLOOKUP/SWITCH/IFNA dependency).
     for r in range(2, table_last_row + 1):
         ws.cell(row=r, column=2, value=_part_name_formula(r))
         ws.cell(row=r, column=5, value=f'=IF($A{r}="","",$D{r}*$I$2)')

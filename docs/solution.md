@@ -20,9 +20,9 @@ The original assignment is summarized in **[`problem.md`](problem.md)**. This do
 |------|----------------|
 | **Excel Tables** on each vendor sheet (`tblVendorA`, `tblVendorB`, `tblVendorC`) | Clean formatting and easy row entry for new parts. |
 | **Excel Table** on **Product_BOM** (`tblBOM`) | Clean filtering, formatting, dropdowns, and a bounded entry area for BOM lines. |
-| **`SWITCH` + `XLOOKUP`** for **Part_Name** and **Unit_Price** | Chooses which vendor worksheet to read, then looks up **Part_ID** in that sheet—satisfying “price from vendor sheet by vendor + part.” |
+| **Nested `IF` + `VLOOKUP` + `IFERROR`** for **Part_Name** and **Unit_Price** | Chooses which vendor worksheet to read, then looks up **Part_ID** in that sheet—satisfying “price from vendor sheet by vendor + part” while staying compatible with older Excel versions. |
 | **`Units_to_build` in I2** | **Total_Qty** = per-product quantity × build count, so one cell scales the whole BOM for batch costing. |
-| **Data validation** on **Vendor** | Reduces typos; vendor names must match what `SWITCH` expects. |
+| **Data validation** on **Vendor** | Reduces typos; vendor names must match what the lookup formulas expect. |
 | **Generator script** [`scripts/build_vendor_workbook.py`](../scripts/build_vendor_workbook.py) | Recreates the `.xlsx` after you edit sample data or table size in code. |
 
 ---
@@ -45,7 +45,7 @@ The original assignment is summarized in **[`problem.md`](problem.md)**. This do
 | **Vendor** | **Dropdown** — `Vendor_A`, `Vendor_B`, or `Vendor_C`. |
 | **Qty_Per_Product** | How many of this part go into **one** finished product. |
 | **Total_Qty** | **Formula** — `Qty_Per_Product × $I$2` (see below). |
-| **Unit_Price** | **Formula** — `XLOOKUP` on the vendor table selected in **Vendor**. |
+| **Unit_Price** | **Formula** — `VLOOKUP` on the vendor sheet selected in **Vendor**. |
 | **Total_Cost** | **Formula** — `Total_Qty × Unit_Price` when both part and price are present. |
 
 ### 3.3 Parameter cell
@@ -58,24 +58,24 @@ The original assignment is summarized in **[`problem.md`](problem.md)**. This do
 
 ## 4. How each requirement is met (formulas)
 
-**Excel version:** **Microsoft 365** or **Excel 2021+** is required for **`XLOOKUP`**, **`SWITCH`**, and **`IFNA`**.
+**Excel version:** **Excel 2010+** or **Microsoft 365** is supported. The workbook intentionally uses broadly compatible functions: **`VLOOKUP`**, **`IFERROR`**, and **`IF`**.
 
 ### 4.1 Unit price from the correct vendor sheet
 
 For each BOM row, **Unit_Price** is:
 
 - If **Part_ID** is blank → blank.  
-- Else → **`SWITCH` on `Vendor`**:
-  - `Vendor_A` → `XLOOKUP($A2, Vendor_A!$A:$A, Vendor_A!$C:$C)`
+- Else → nested **`IF`** checks **Vendor**:
+  - `Vendor_A` → `IFERROR(VLOOKUP($A2, Vendor_A!$A:$C, 3, FALSE), "")`
   - `Vendor_B` → same pattern on `Vendor_B`
   - `Vendor_C` → same pattern on `Vendor_C`
-- If the part is missing on that vendor → **`IFNA`** returns an empty **Unit_Price** (and **Total_Cost** stays blank).
+- If the part is missing on that vendor → **`IFERROR`** returns an empty **Unit_Price** (and **Total_Cost** stays blank).
 
 So every price path points at **columns on the vendor worksheets**.
 
 ### 4.2 Part name aligned with vendor + Part_ID
 
-**Part_Name** uses the same **`SWITCH` + `XLOOKUP`** pattern against the **Part_Name** column on the selected vendor sheet. If the part is not on that vendor’s list, the cell shows **-- not on vendor --** (so you notice a mismatch between **Vendor** and **Part_ID**).
+**Part_Name** uses the same nested **`IF` + `VLOOKUP` + `IFERROR`** pattern against the **Part_Name** column on the selected vendor sheet. If the part is not on that vendor’s list, the cell shows **-- not on vendor --** (so you notice a mismatch between **Vendor** and **Part_ID**).
 
 ### 4.3 Automatic costs from quantities
 
@@ -87,7 +87,7 @@ So every price path points at **columns on the vendor worksheets**.
 - **More parts for a vendor:** add rows **inside** that vendor’s table (immediately under the last data row in the table).  
 - **More BOM lines in the generated file:** use the blank rows already inside `tblBOM`; increase `table_last_row` if you need more prebuilt formula rows.
 - **Larger BOM table in a regenerated file:** increase `table_last_row` in `scripts/build_vendor_workbook.py` and rerun the script.  
-- **Another vendor:** add a sheet + table, extend **`SWITCH`** in the script for **Part_Name**, **Unit_Price**, and the **Vendor** validation list, then regenerate.
+- **Another vendor:** add a sheet + table, extend the nested **`IF`** formulas in the script for **Part_Name** and **Unit_Price**, extend the **Vendor** validation list, then regenerate.
 
 ---
 
