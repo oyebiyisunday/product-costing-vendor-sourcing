@@ -5,6 +5,9 @@ Maintainer: @oyebiyisunday
 """
 from __future__ import annotations
 
+import re
+import shutil
+import zipfile
 from pathlib import Path
 
 from openpyxl import Workbook
@@ -192,6 +195,32 @@ def _add_product_bom(wb: Workbook) -> None:
     ws["K1"].alignment = Alignment(wrap_text=True, vertical="top")
 
 
+_EMPTY_V = re.compile(rb"<v\s*/>|<v></v>")
+
+
+def _strip_empty_cached_values(xlsx_path: Path) -> None:
+    """Remove empty cached-value elements from formula cells.
+
+    openpyxl writes ``<f>...</f><v></v>`` for formula cells with no precomputed
+    result. Excel 365/2021 treats the empty numeric ``<v>`` as invalid and shows
+    a "We found a problem with some content" recovery dialog on open. Stripping
+    those empty elements lets Excel calculate values lazily on first open, which
+    is the desired behavior here (no Excel engine is available at build time).
+    """
+    tmp = xlsx_path.with_suffix(xlsx_path.suffix + ".tmp")
+    with zipfile.ZipFile(xlsx_path) as zin, zipfile.ZipFile(
+        tmp, "w", zipfile.ZIP_DEFLATED
+    ) as zout:
+        for item in zin.infolist():
+            data = zin.read(item.filename)
+            if item.filename.startswith("xl/worksheets/sheet") and item.filename.endswith(
+                ".xml"
+            ):
+                data = _EMPTY_V.sub(b"", data)
+            zout.writestr(item, data)
+    shutil.move(str(tmp), str(xlsx_path))
+
+
 def main() -> None:
     wb = Workbook()
     default = wb.active
@@ -204,6 +233,7 @@ def main() -> None:
 
     OUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     wb.save(OUT_PATH)
+    _strip_empty_cached_values(OUT_PATH)
     print(f"Wrote {OUT_PATH}")
 
 
