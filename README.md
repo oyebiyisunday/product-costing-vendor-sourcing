@@ -44,11 +44,7 @@ Pick a vendor per line item, pull unit prices from vendor-specific sheets, and a
 
 ### 1. Open the Workbook
 
-```bash
-workbook/Product_Costing_Vendor_Sourcing.xlsx
-```
-
-**Requirements:** Microsoft 365 or Excel 2021+
+Open `workbook/Product_Costing_Vendor_Sourcing.xlsx` in **Microsoft 365** or **Excel 2021+** (required for `XLOOKUP`, `SWITCH`, and `IFNA`).
 
 ### 2. Review Vendor Pricing
 
@@ -56,14 +52,18 @@ Visit **Vendor_A**, **Vendor_B**, or **Vendor_C** sheets to see current pricing 
 
 ### 3. Create Your BOM
 
-On the **Product_BOM** sheet:
+On the **Product_BOM** sheet, fill the user-input cells; formula cells recalculate automatically:
 
-| Field | Description | Example |
-|-------|-------------|---------|
-| `Units_to_build` (I2) | Build quantity to scale all parts | `100` |
-| `Part_ID` (Column A) | Unique part identifier | `RESISTOR-001` |
-| `Vendor` (Column B) | Select vendor for this part | `Vendor_A` |
-| `Qty_Per_Product` (Column C) | Quantity needed per unit | `10` |
+| Cell | Field | Type | Example |
+|------|-------|------|---------|
+| `I2` | `Units_to_build` | Input | `100` |
+| Column A | `Part_ID` | Input | `P001` |
+| Column B | `Part_Name` | Formula (auto) | _looked up_ |
+| Column C | `Vendor` | Input (dropdown) | `Vendor_A` |
+| Column D | `Qty_Per_Product` | Input | `10` |
+| Column E | `Total_Qty` | Formula (auto) | `D × $I$2` |
+| Column F | `Unit_Price` | Formula (auto) | _looked up_ |
+| Column G | `Total_Cost` | Formula (auto) | `E × F` |
 
 → **Total cost updates automatically!**
 
@@ -78,13 +78,16 @@ product-costing-vendor-sourcing/
 ├── workbook/
 │   └── Product_Costing_Vendor_Sourcing.xlsx    # Main Excel workbook with vendor sheets & BOM
 ├── scripts/
-│   └── build_vendor_workbook.py               # Regenerate workbook (Python + openpyxl)
+│   ├── build_vendor_workbook.py                # Regenerate workbook (Python + openpyxl)
+│   └── verify_workbook.py                      # CI check: rebuilds and diffs against committed xlsx
 ├── docs/
-│   ├── problem.md                             # Original problem statement & requirements
-│   └── solution.md                            # Design, formulas, and step-by-step usage
-├── requirements.txt                           # Python dependencies
-├── LICENSE                                    # MIT License
-└── README.md                                  # This file
+│   ├── problem.md                              # Original problem statement & requirements
+│   └── solution.md                             # Design, formulas, and step-by-step usage
+├── .github/workflows/
+│   └── ci.yml                                  # GitHub Actions workflow (lint + workbook verify)
+├── requirements.txt                            # Python dependencies
+├── LICENSE                                     # MIT License
+└── README.md                                   # This file
 ```
 
 ### Key Files
@@ -93,9 +96,11 @@ product-costing-vendor-sourcing/
 |------|---------|
 | `workbook/Product_Costing_Vendor_Sourcing.xlsx` | **Vendor_A**, **Vendor_B**, **Vendor_C** pricing tables + **Product_BOM** with XLOOKUP formulas |
 | `scripts/build_vendor_workbook.py` | Regenerates the workbook using Python (openpyxl) |
+| `scripts/verify_workbook.py` | Rebuilds to a temp file and asserts byte-for-cell parity with the committed `.xlsx` |
+| `.github/workflows/ci.yml` | Runs compile check + `verify_workbook.py` on every push and pull request to `main` |
 | `docs/problem.md` | Detailed problem definition and original requirements |
 | `docs/solution.md` | Architecture, formula explanations, and full usage walkthrough |
-| `requirements.txt` | Python package versions (openpyxl, etc.) |
+| `requirements.txt` | Python dependency pin (`openpyxl`) |
 
 ---
 
@@ -106,11 +111,11 @@ product-costing-vendor-sourcing/
 1. **Open** `workbook/Product_Costing_Vendor_Sourcing.xlsx`
 2. **Check vendor pricing** on Vendor_A, Vendor_B, Vendor_C sheets (update as needed)
 3. **Set `Units_to_build`** in cell I2 on the Product_BOM sheet
-4. **Enter your parts:**
-   - Column A: Part IDs
-   - Column B: Vendor choice (Vendor_A, Vendor_B, or Vendor_C)
-   - Column C: Quantity per product
-5. **View results:** Total costs roll up automatically
+4. **Enter your parts** (only the input columns; formula columns fill themselves):
+   - Column A: `Part_ID`
+   - Column C: `Vendor` (dropdown — Vendor_A, Vendor_B, or Vendor_C)
+   - Column D: `Qty_Per_Product`
+5. **View results:** `Part_Name`, `Total_Qty`, `Unit_Price`, and `Total_Cost` roll up automatically
 
 ### For Developers (Customization)
 
