@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import sys
 import tempfile
+import zipfile
 from pathlib import Path
 
 from openpyxl import load_workbook
@@ -60,6 +61,29 @@ def _compare_workbooks(wb_disk, wb_fresh) -> list[str]:
     return errs
 
 
+def _validate_excel_formula_compat(path: Path, wb) -> list[str]:
+    errs: list[str] = []
+    ws = wb["Product_BOM"]
+    for row in range(2, 41):
+        for col in (2, 5, 6, 7):
+            ref = f"Product_BOM!{get_column_letter(col)}{row}"
+            formula = ws.cell(row, col).value
+            if not isinstance(formula, str) or not formula.startswith("="):
+                errs.append(f"{ref}: missing formula")
+                continue
+            if "[@" in formula or "#REF!" in formula:
+                errs.append(f"{ref}: Excel-fragile formula {formula!r}")
+
+    with zipfile.ZipFile(path) as zf:
+        for name in zf.namelist():
+            if not name.startswith("xl/worksheets/sheet") or not name.endswith(".xml"):
+                continue
+            data = zf.read(name)
+            if b"<v></v>" in data or b"<v/>" in data:
+                errs.append(f"{name}: contains empty cached formula value")
+    return errs
+
+
 def main() -> None:
     sample_errs = _validate_bom_samples()
     if sample_errs:
@@ -87,6 +111,13 @@ def main() -> None:
     if diff:
         print("FAIL: committed workbook does not match generator (re-run build script).")
         for e in diff:
+            print(" ", e)
+        raise SystemExit(1)
+
+    compat = _validate_excel_formula_compat(path, wb_disk)
+    if compat:
+        print("FAIL: workbook contains formulas/metadata that Excel may repair.")
+        for e in compat[:30]:
             print(" ", e)
         raise SystemExit(1)
 

@@ -90,24 +90,24 @@ def _add_vendor_sheet(wb: Workbook, name: str, rows: list, table_name: str) -> N
         ws.cell(row=r, column=3).number_format = "$#,##0.00"
 
 
-def _part_name_formula() -> str:
+def _part_name_formula(row: int) -> str:
     return (
-        '=IF([@Part_ID]="","",'
-        'IFNA(SWITCH([@Vendor],'
-        '"Vendor_A",XLOOKUP([@Part_ID],tblVendorA[Part_ID],tblVendorA[Part_Name]),'
-        '"Vendor_B",XLOOKUP([@Part_ID],tblVendorB[Part_ID],tblVendorB[Part_Name]),'
-        '"Vendor_C",XLOOKUP([@Part_ID],tblVendorC[Part_ID],tblVendorC[Part_Name])),'
-        '"— not on vendor —"))'
+        f'=IF($A{row}="","",'
+        f'IFNA(SWITCH($C{row},'
+        f'"Vendor_A",XLOOKUP($A{row},Vendor_A!$A:$A,Vendor_A!$B:$B),'
+        f'"Vendor_B",XLOOKUP($A{row},Vendor_B!$A:$A,Vendor_B!$B:$B),'
+        f'"Vendor_C",XLOOKUP($A{row},Vendor_C!$A:$A,Vendor_C!$B:$B)),'
+        '"-- not on vendor --"))'
     )
 
 
-def _unit_price_formula() -> str:
+def _unit_price_formula(row: int) -> str:
     return (
-        '=IF([@Part_ID]="","",'
-        'IFNA(SWITCH([@Vendor],'
-        '"Vendor_A",XLOOKUP([@Part_ID],tblVendorA[Part_ID],tblVendorA[Unit_Price]),'
-        '"Vendor_B",XLOOKUP([@Part_ID],tblVendorB[Part_ID],tblVendorB[Unit_Price]),'
-        '"Vendor_C",XLOOKUP([@Part_ID],tblVendorC[Part_ID],tblVendorC[Unit_Price])),'
+        f'=IF($A{row}="","",'
+        f'IFNA(SWITCH($C{row},'
+        f'"Vendor_A",XLOOKUP($A{row},Vendor_A!$A:$A,Vendor_A!$C:$C),'
+        f'"Vendor_B",XLOOKUP($A{row},Vendor_B!$A:$A,Vendor_B!$C:$C),'
+        f'"Vendor_C",XLOOKUP($A{row},Vendor_C!$A:$A,Vendor_C!$C:$C)),'
         '""))'
     )
 
@@ -146,15 +146,16 @@ def _add_product_bom(wb: Workbook) -> None:
 
     _style_header(ws, len(headers))
 
-    # Formulas for all body rows (scalable: user adds rows inside table)
+    # Use A1 references here because Excel repairs openpyxl-generated
+    # structured references in some desktop builds.
     for r in range(2, table_last_row + 1):
-        ws.cell(row=r, column=2, value=_part_name_formula())
-        ws.cell(row=r, column=5, value="=[@[Qty_Per_Product]]*$I$2")
-        ws.cell(row=r, column=6, value=_unit_price_formula())
+        ws.cell(row=r, column=2, value=_part_name_formula(r))
+        ws.cell(row=r, column=5, value=f'=IF($A{r}="","",$D{r}*$I$2)')
+        ws.cell(row=r, column=6, value=_unit_price_formula(r))
         ws.cell(
             row=r,
             column=7,
-            value='=IF([@Part_ID]="","",IF([@Unit_Price]="","",[@Total_Qty]*[@Unit_Price]))',
+            value=f'=IF($A{r}="","",IF($F{r}="","",$E{r}*$F{r}))',
         )
 
     # Sample lines

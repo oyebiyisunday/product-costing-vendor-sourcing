@@ -18,9 +18,9 @@ The original assignment is summarized in **[`problem.md`](problem.md)**. This do
 
 | Idea | Why it helps |
 |------|----------------|
-| **Excel Tables** on each vendor sheet (`tblVendorA`, `tblVendorB`, `tblVendorC`) | Named, stable ranges for lookups; easy to add rows (new parts) without changing formulas. |
-| **Excel Table** on **Product_BOM** (`tblBOM`) | Formulas use structured references (`[@Part_ID]`, etc.) so new BOM rows stay consistent when you insert rows *inside* the table. |
-| **`SWITCH` + `XLOOKUP`** for **Part_Name** and **Unit_Price** | Chooses which vendor table to read, then looks up **Part_ID** in that table only—satisfying “price from vendor sheet by vendor + part.” |
+| **Excel Tables** on each vendor sheet (`tblVendorA`, `tblVendorB`, `tblVendorC`) | Clean formatting and easy row entry for new parts. |
+| **Excel Table** on **Product_BOM** (`tblBOM`) | Clean filtering, formatting, dropdowns, and a bounded entry area for BOM lines. |
+| **`SWITCH` + `XLOOKUP`** for **Part_Name** and **Unit_Price** | Chooses which vendor worksheet to read, then looks up **Part_ID** in that sheet—satisfying “price from vendor sheet by vendor + part.” |
 | **`Units_to_build` in I2** | **Total_Qty** = per-product quantity × build count, so one cell scales the whole BOM for batch costing. |
 | **Data validation** on **Vendor** | Reduces typos; vendor names must match what `SWITCH` expects. |
 | **Generator script** [`scripts/build_vendor_workbook.py`](../scripts/build_vendor_workbook.py) | Recreates the `.xlsx` after you edit sample data or table size in code. |
@@ -65,27 +65,27 @@ The original assignment is summarized in **[`problem.md`](problem.md)**. This do
 For each BOM row, **Unit_Price** is:
 
 - If **Part_ID** is blank → blank.  
-- Else → **`SWITCH` on `Vendor`**:  
-  - `Vendor_A` → `XLOOKUP(Part_ID, tblVendorA[Part_ID], tblVendorA[Unit_Price])`  
-  - `Vendor_B` → same pattern on `tblVendorB`  
-  - `Vendor_C` → same pattern on `tblVendorC`  
+- Else → **`SWITCH` on `Vendor`**:
+  - `Vendor_A` → `XLOOKUP($A2, Vendor_A!$A:$A, Vendor_A!$C:$C)`
+  - `Vendor_B` → same pattern on `Vendor_B`
+  - `Vendor_C` → same pattern on `Vendor_C`
 - If the part is missing on that vendor → **`IFNA`** returns an empty **Unit_Price** (and **Total_Cost** stays blank).
 
-So every price path points at **columns on the vendor worksheets** via the table names.
+So every price path points at **columns on the vendor worksheets**.
 
 ### 4.2 Part name aligned with vendor + Part_ID
 
-**Part_Name** uses the same **`SWITCH` + `XLOOKUP`** pattern against **`[Part_Name]`** on the selected vendor table. If the part is not on that vendor’s list, the cell shows **— not on vendor —** (so you notice a mismatch between **Vendor** and **Part_ID**).
+**Part_Name** uses the same **`SWITCH` + `XLOOKUP`** pattern against the **Part_Name** column on the selected vendor sheet. If the part is not on that vendor’s list, the cell shows **-- not on vendor --** (so you notice a mismatch between **Vendor** and **Part_ID**).
 
 ### 4.3 Automatic costs from quantities
 
-- **Total_Qty** = `[Qty_Per_Product] × $I$2`  
-- **Total_Cost** = `[Total_Qty] × [Unit_Price]` only when **Part_ID** is non-empty and **Unit_Price** resolved (avoids multiplying by blank text).
+- **Total_Qty** = `Qty_Per_Product × $I$2`
+- **Total_Cost** = `Total_Qty × Unit_Price` only when **Part_ID** is non-empty and **Unit_Price** resolved (avoids multiplying by blank text).
 
 ### 4.4 Ease of use and scalability
 
 - **More parts for a vendor:** add rows **inside** that vendor’s table (immediately under the last data row in the table).  
-- **More BOM lines:** add rows **inside** `tblBOM` (not below the table without resizing the table). In Excel: right-click a row in the table → **Insert** → **Table Rows Below**.  
+- **More BOM lines in the generated file:** use the blank rows already inside `tblBOM`; increase `table_last_row` if you need more prebuilt formula rows.
 - **Larger BOM table in a regenerated file:** increase `table_last_row` in `scripts/build_vendor_workbook.py` and rerun the script.  
 - **Another vendor:** add a sheet + table, extend **`SWITCH`** in the script for **Part_Name**, **Unit_Price**, and the **Vendor** validation list, then regenerate.
 
@@ -98,7 +98,7 @@ So every price path points at **columns on the vendor worksheets** via the table
 3. Go to **Product_BOM**.  
 4. Set **Units_to_build** in **I2** (e.g. `100` for a hundred-unit build).  
 5. For each line: enter **Part_ID**, choose **Vendor**, enter **Qty_Per_Product**.  
-6. Confirm **Part_Name** and **Unit_Price** look right; fix **Vendor** or **Part_ID** if you see **— not on vendor —** or blank price.  
+6. Confirm **Part_Name** and **Unit_Price** look right; fix **Vendor** or **Part_ID** if you see **-- not on vendor --** or blank price.
 7. Sum **Total_Cost** as needed (e.g. a total row below the table or `=SUM(tblBOM[Total_Cost])` in a spare cell—add manually if you want a grand total).
 
 ---
